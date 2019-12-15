@@ -5,17 +5,20 @@ public class RootQuery : ObjectGraphType {
         this.Name = "RootQuery";
 
         Field<StringGraphType>("me",description:"Information about current logged in user",resolve:ctx => {
-            return UserStore.Name;
+            var foo = ctx.Arguments["testing"];
+            return UserStore.Name + " " +foo;
+        },arguments:new QueryArguments() { 
+            new QueryArgument<StringGraphType> {Name = "testing",DefaultValue="bar baz"}
         });
     }
 }
 
-public class UserType : ObjectGraphType {
+public class UserType : ObjectGraphType<User> {
     public UserType() {
         Name = "UserType";
         Description = "User information";
-        Field<StringGraphType>("name",description:"The user name");
-        Field<StringGraphType>("email",description:"The user email adress.");
+        Field(x => x.Name).Description("The user name");
+        Field(x => x.Email).Description("The user email adress.");
     }
 }
 
